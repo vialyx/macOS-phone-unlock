@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# PhoneUnlocker Post-Installation Script
+# Runs after the package installation
+
+set -e
+
+# Define colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Logging function
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" >> /var/log/phoneunlocker_install.log
+}
+
+log "=== PhoneUnlocker Post-Installation Started ==="
+
+# App path
+APP_PATH="/Applications/PhoneUnlocker.app"
+
+if [ ! -d "$APP_PATH" ]; then
+    log "ERROR: Application not found at $APP_PATH"
+    exit 1
+fi
+
+log "Setting permissions for $APP_PATH"
+
+# Fix permissions
+chmod -R 755 "$APP_PATH"
+chmod +x "$APP_PATH/Contents/MacOS/PhoneUnlocker"
+
+log "✓ Permissions set correctly"
+
+# Update Accessibility database
+log "Updating Accessibility permissions database"
+
+# Grant accessibility to PhoneUnlocker
+BUNDLE_ID="com.phoneunlocker.app"
+
+# Try to add to accessibility using tccutil if available
+if command -v tccutil &> /dev/null; then
+    tccutil reset All "$BUNDLE_ID" 2>/dev/null || true
+    log "Accessibility permissions reset (user will grant during first launch)"
+fi
+
+log "✓ Post-installation completed successfully"
+
+# Clean up backup if installation was successful
+if [ -d "/Applications/PhoneUnlocker.app.backup" ]; then
+    log "Cleaning up backup"
+    rm -rf "/Applications/PhoneUnlocker.app.backup"
+fi
+
+log "=== PhoneUnlocker Installation Complete ==="
+exit 0

@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# PhoneUnlocker Pre-Installation Script
+# Runs before the package installation
+
+set -e
+
+# Define colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Logging function
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" >> /var/log/phoneunlocker_install.log
+}
+
+log "=== PhoneUnlocker Pre-Installation Started ==="
+
+# Check macOS version
+OS_VERSION=$(sw_vers -productVersion)
+MAJOR=$(echo "$OS_VERSION" | cut -d. -f1)
+
+log "macOS Version: $OS_VERSION"
+
+if [ "$MAJOR" -lt 13 ]; then
+    log "ERROR: macOS 13.0 or later required"
+    exit 1
+fi
+
+log "✓ macOS version check passed"
+
+# Kill existing PhoneUnlocker process if running
+if pgrep -xq "PhoneUnlocker"; then
+    log "Stopping existing PhoneUnlocker instance"
+    killall PhoneUnlocker 2>/dev/null || true
+    sleep 2
+fi
+
+# Check if backup exists and remove old version
+if [ -d "/Applications/PhoneUnlocker.app" ]; then
+    log "Backing up existing PhoneUnlocker installation"
+    if [ -d "/Applications/PhoneUnlocker.app.backup" ]; then
+        rm -rf "/Applications/PhoneUnlocker.app.backup"
+    fi
+    mv "/Applications/PhoneUnlocker.app" "/Applications/PhoneUnlocker.app.backup" || true
+fi
+
+log "Pre-installation checks completed successfully"
+exit 0

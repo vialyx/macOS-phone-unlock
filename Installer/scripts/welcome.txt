@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# PhoneUnlocker Welcome Script
+# Displayed at the beginning of installation
+
+cat << 'EOF'
+╔════════════════════════════════════════════════════════╗
+║                                                        ║
+║         Welcome to PhoneUnlocker Installation!        ║
+║                                                        ║
+║   Unlock your Mac's screensaver using iPhone Face ID  ║
+║                                                        ║
+╚════════════════════════════════════════════════════════╝
+
+WHAT YOU'LL GET:
+✓ Secure Face ID authentication for Mac screensaver
+✓ One-click unlock from your iPhone
+✓ Zero-dollar Apple Pay transactions (no charges)
+✓ Clean, intuitive menu bar application
+✓ Runs in the background, always ready
+
+REQUIREMENTS:
+✓ macOS 13.0 or later (Ventura, Sonoma, Sequoia)
+✓ Apple Pay configured on your Mac
+✓ iPhone with Face ID (XS or newer)
+✓ WiFi or Bluetooth connection
+
+WHAT HAPPENS NEXT:
+1. Installation of the application
+2. System permission setup
+3. First-time configuration
+4. You're ready to use!
+
+Need help? Check the documentation or visit:
+https://github.com/maksimvialykh/macOS-phone-unlock
+
+Let's get started!
+
+EOF

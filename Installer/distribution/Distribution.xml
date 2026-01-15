@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<installer-gui-script minSpecVersion="1">
+    <title>PhoneUnlocker</title>
+    <background file="background.tif" alignment="bottomleft" scaling="none"/>
+    <welcome file="Welcome.html"/>
+    <readme file="Readme.html"/>
+    <license file="License.html"/>
+    
+    <options customize="never" require-admin="true"/>
+    
+    <choices-outline>
+        <line choice="default">
+            <line choice="phoneunlocker"/>
+        </line>
+    </choices-outline>
+    
+    <choice id="default"/>
+    <choice id="phoneunlocker" visible="false">
+        <pkg-ref id="com.phoneunlocker.app.pkg"/>
+    </choice>
+    
+    <pkg-ref id="com.phoneunlocker.app.pkg" installKBytes="50000" version="1.0.0" auth="root">
+        PhoneUnlocker.pkg
+    </pkg-ref>
+    
+    <installation-check script="checkInstallation()"/>
+    
+    <script>
+        function checkInstallation() {
+            var osVersion = system.version.ProductVersion;
+            var majorVersion = parseInt(osVersion.split('.')[0]);
+            
+            if (majorVersion < 13) {
+                my.result.title = 'Unsupported OS Version';
+                my.result.message = 'PhoneUnlocker requires macOS 13.0 (Ventura) or later.';
+                my.result.type = 'Fatal';
+                return false;
+            }
+            
+            return true;
+        }
+    </script>
+    
+    <summary>
+        <line number="1">Installation Summary</line>
+        <line number="2">Application: PhoneUnlocker v1.0.0</line>
+        <line number="3">Destination: /Applications</line>
+    </summary>
+    
+    <conclusion/>
+</installer-gui-script>
