@@ -23,23 +23,7 @@
         PhoneUnlocker.pkg
     </pkg-ref>
     
-    <installation-check script="checkInstallation()"/>
-    
-    <script>
-        function checkInstallation() {
-            var osVersion = system.version.ProductVersion;
-            var majorVersion = parseInt(osVersion.split('.')[0]);
-            
-            if (majorVersion < 13) {
-                my.result.title = 'Unsupported OS Version';
-                my.result.message = 'PhoneUnlocker requires macOS 13.0 (Ventura) or later.';
-                my.result.type = 'Fatal';
-                return false;
-            }
-            
-            return true;
-        }
-    </script>
+
     
     <summary>
         <line number="1">Installation Summary</line>

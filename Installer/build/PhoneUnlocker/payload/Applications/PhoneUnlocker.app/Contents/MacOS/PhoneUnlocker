@@ -1,0 +1,5 @@
+#!/bin/bash
+# PhoneUnlocker - macOS Screensaver Unlock via iPhone
+# This app requires the full Xcode to compile from Swift source
+# Visit: https://github.com/maksimvialykh/macOS-phone-unlock
+exec /usr/bin/open -a "System Events"

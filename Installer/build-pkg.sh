@@ -56,7 +56,20 @@ main() {
     print_step "Checking system requirements..."
     
     if ! command -v xcodebuild &> /dev/null; then
-        print_error "Xcode not found. Please install Xcode."
+        print_error "xcodebuild not found. Full Xcode is required."
+        echo ""
+        echo "This system has Command Line Tools but needs full Xcode."
+        echo ""
+        echo "Install Xcode from:"
+        echo "  1. App Store: https://apps.apple.com/app/xcode/id497799835"
+        echo "  2. Or via: xcode-select --install"
+        echo ""
+        echo "After installation, run:"
+        echo "  sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer"
+        echo "  sudo xcodebuild -runFirstLaunch"
+        echo ""
+        echo "Then try building again:"
+        echo "  ./Installer/build-all.sh"
         exit 1
     fi
     print_success "Xcode found"
@@ -86,30 +99,26 @@ main() {
     # Step 3: Build the application
     print_step "Building PhoneUnlocker application..."
     
-    cd "$PROJECT_DIR"
-    xcodebuild -scheme PhoneUnlocker \
-        -configuration Release \
-        -derivedDataPath "$BUILD_DIR/xcode" \
-        -quiet
+    # Use manual app bundle builder to avoid Xcode project issues
+    "$SCRIPT_DIR/build-app-bundle.sh" > /dev/null 2>&1
     
-    if [ ! -d "$BUILD_DIR/xcode/Build/Products/Release/$APP_NAME.app" ]; then
-        print_error "Build failed"
+    if [ ! -d "$PAYLOAD_DIR/Applications/PhoneUnlocker.app" ]; then
+        print_error "App bundle build failed"
         exit 1
     fi
-    print_success "Application built successfully"
+    print_success "Application bundle created successfully"
     
     echo ""
     
     # Step 4: Copy application to payload
-    print_step "Preparing application payload..."
+    print_step "Verifying application..."
     
-    cp -R "$BUILD_DIR/xcode/Build/Products/Release/$APP_NAME.app" "$PAYLOAD_DIR/Applications/"
+    if [ ! -d "$PAYLOAD_DIR/Applications/PhoneUnlocker.app" ]; then
+        print_error "Application not found in payload"
+        exit 1
+    fi
     
-    # Set proper permissions
-    chmod -R 755 "$PAYLOAD_DIR/Applications/$APP_NAME.app"
-    chmod +x "$PAYLOAD_DIR/Applications/$APP_NAME.app/Contents/MacOS/PhoneUnlocker"
-    
-    print_success "Application copied to payload"
+    print_success "Application bundle verified"
     
     echo ""
     
